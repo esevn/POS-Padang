@@ -4,6 +4,12 @@ require_once __DIR__ . '/../Model/Model.php';
 require_once __DIR__ . '/../Model/Category.php';
 
 
+if(!isset($_SESSION["full_name"])){
+    header("Location: login.php");
+    exit;
+  }
+
+
 $categories = new Category();
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -28,6 +34,7 @@ $totalPages = ceil($lenght / $limit);
     <link rel="stylesheet" href="../assets/modules/fontawesome/css/all.min.css">
 
     <!-- CSS Libraries -->
+    <link rel="stylesheet" href="../assets/modules/prism/prism.css">
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -99,18 +106,18 @@ $totalPages = ceil($lenght / $limit);
                                 <label for="checkbox-1" class="custom-control-label">&nbsp;</label>
                               </div>
                             </td>
-                            <td><?= $category["name"] ?></td>
+                            <td><?= $category["category_name"] ?></td>
                             <td class="justify-content-end">
-                              <a href="detail-category.php?id=<?= $category["id"] ?>" class="btn btn-primary mr-1"><i class="far fa-eye"></i> Detail</a>
-                              <a href="edit-category.php?id=<?= $category["id"] ?>" class="btn btn-success mr-1"> <i class="far fa-edit"></i> Edit</a>
-                              <a href="delete-category.php?id=<?= $category["id"] ?>" class="btn btn-danger mr-1"><i class="far fa-trash-alt"></i> Hapus</a>
+                              <button onclick="modalDetail(<?= $category['id_category']?>, '<?= $category['category_name']?>' )"  class="btn btn-primary mr-1"><i class="far fa-eye"></i> Detail</button>
+                              <a href="edit-category.php?id=<?= $category["id_category"] ?>" class="btn btn-success mr-1"> <i class="far fa-edit"></i> Edit</a>
+                              <a href="delete-category.php?id=<?= $category["id_category"] ?>" class="btn btn-danger mr-1"><i class="far fa-trash-alt"></i> Hapus</a>
                             </td>
                           </tr>
                           <?php endforeach; ?>
                         </table>
                       </div>
                       <div class="card-footer text-right">
-                      <nav class="d-inline-block">
+                      <div class="d-inline-block">
                         <ul class="pagination mb-0">
                           <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
                             <a class="page-link" href="?page=<?= $page -1 ?>" ><i class="fas fa-chevron-left"></i></a>
@@ -129,7 +136,7 @@ $totalPages = ceil($lenght / $limit);
                             <a class="page-link" href="?page=<?= $page + 1 ?>"><i class="fas fa-chevron-right"></i></a>
                           </li>
                         </ul>
-                      </nav>
+                      </div>
                     </div>
                     </div>
                   </div>
@@ -142,6 +149,26 @@ $totalPages = ceil($lenght / $limit);
       </div>
     </div>
 
+    <!-- modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="detailModal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Detail Kategori</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- <p>Modal body text goes here.</p> -->
+              </div>
+              <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     <!-- General JS Scripts -->
     <script src="../assets/modules/jquery.min.js"></script>
     <script src="../assets/modules/popper.js"></script>
@@ -151,9 +178,11 @@ $totalPages = ceil($lenght / $limit);
     <script src="../assets/modules/moment.min.js"></script>
     <script src="../assets/js/stisla.js"></script>
 
-    <!-- JS Libraies -->
+     <!-- JS Libraies -->
+  <script src="../assets/modules/prism/prism.js"></script>
 
-    <!-- Page Specific JS File -->
+  <!-- Page Specific JS File -->
+  <script src="../assets/js/page/bootstrap-modal.js"></script>
 
     <!-- Template JS File -->
     <script src="../assets/js/scripts.js"></script>
@@ -166,7 +195,19 @@ $totalPages = ceil($lenght / $limit);
           $("#content").load("../assets/search/category.php?keyword=" + $(this).val());
         });
       });
+
+      function modalDetail(id, name){
+        $('#detailModal .modal').empty();
+        let content = '<ul>';
+        content += `<li><strong>Id Kategori:</strong> ${id}</li>`;
+        content += `<li><strong>Nama Kategori:</strong> ${name}</li>`;
+        content += '</ul>';
+
+        $('#detailModal .modal-body').html(content);
+        $('#detailModal').modal('show');
+      }
     </script>
+
   </body>
 
   </html>

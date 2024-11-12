@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once __DIR__ . '/../DB/Connection.php';
 require_once __DIR__ . '/../Interface/ModellInterface.php';
@@ -45,7 +46,7 @@ abstract class Model extends Connection implements ModelInterface{
     }
 
     public function find_data($id, $table){
-        $query = "SELECT * FROM $table WHERE id = $id";
+        $query = "SELECT * FROM $table WHERE id_category = $id";
         $result = mysqli_query($this->db, $query);
         
         return $this->convert_data($result);

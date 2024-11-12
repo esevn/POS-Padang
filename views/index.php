@@ -1,3 +1,24 @@
+<?php 
+
+
+
+require_once __DIR__ . '/../Model/Model.php';
+require_once __DIR__ . '/../Model/Item.php';
+require_once __DIR__ . '/../Model/Category.php';
+
+if(!isset($_SESSION["full_name"])){
+  header("Location: login.php");
+  exit;
+}
+
+$categories = new Category();
+$menus = new Item();
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,19 +87,19 @@
                     </div>
                   </div>
                   <div class="card-stats-items">
-                    <div class="card-stats-item">
-                      <div class="card-stats-item-count">2</div>
-                      <div class="card-stats-item-label">Category</div>
-                    </div>
-                    <div class="card-stats-item">
-                      <div class="card-stats-item-count">12</div>
-                      <div class="card-stats-item-label">Menu</div>
-                    </div>
-                    <div class="card-stats-item">
-                      <div class="card-stats-item-count">3</div>
-                      <div class="card-stats-item-label">Karyawan</div>
-                    </div>
-                  </div>
+                        <div class="card-stats-item">
+                            <div class="card-stats-item-count"><?= count($categories->all()) ?></div>
+                            <div class="card-stats-item-label">Kategori</div>
+                        </div>
+                        <div class="card-stats-item">
+                            <div class="card-stats-item-count"><?= count($menus->all()) ?></div>
+                            <div class="card-stats-item-label">Menu</div>
+                        </div>
+                        <div class="card-stats-item">
+                            <div class="card-stats-item-count">3</div>
+                            <div class="card-stats-item-label">Karyawan</div>
+                        </div>
+                      </div>
                 </div>
                 <div class="card-icon shadow-primary bg-primary">
                   <i class="fas fa-archive"></i>

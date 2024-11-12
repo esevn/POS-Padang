@@ -1,3 +1,32 @@
+<?php
+
+require_once __DIR__ . '/../Model/Model.php';
+require_once __DIR__ . '/../Model/Category.php';
+require_once __DIR__ . '/../Model/Item.php';
+
+if(!isset($_SESSION["full_name"])){
+  header("Location: login.php");
+  exit;
+}
+
+$categories = new Category();
+$categories = $categories->all();
+
+$menu = new Item();
+
+if(isset($_POST["submit"])){
+  // var_dump($_FILES);
+  $datas = [
+  "post" => $_POST,
+  "files" => $_FILES,
+  ];
+
+  $result = $menu->create($datas);
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,39 +88,36 @@
                   <div class="card-header">
                     <h4>Input Text</h4>
                   </div>
-                  <div class="card-body">
+                    <form action="" method="POST" enctype="multipart/form-data" class="card-body" >
                     <div class="form-group">
-                      <label>Default Input Text</label>
-                      <input type="text" class="form-control">
+                      <label for="name">Nama menu</label>
+                      <input type="text" id="name" name="name" class="form-control">
                     </div>
                     <div class="form-group d-flex flex-column">
-                        <label>Picture</label>
+                        <label for="attachment">Gambar</label>
                           <div class="custom-file">
-                            <input type="file" name="site_favicon" class="custom-file-input" id="site-favicon">
+                            <input type="file" name="attachment" class="custom-file-input" id="attachment">
                             <label class="custom-file-label">Choose File</label>
                           </div>
-                          <div class="form-text text-muted">The image must have a maximum size of 1MB`
+                          <div class="form-text text-muted">The image must have a maximum size of 5MB`
                           </div>                 
                       </div>
                     <div class="form-group">
-                      <label>Pilih Kategori</label>
-                      <select class="form-control selectric">
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
-                        <option>Option 4</option>
-                        <option>Option 5</option>
-                        <option>Option 6</option>
+                      <label for="category">Pilih Kategori</label>
+                      <select name="category_id" id="category" class="form-control selectric">
+                        <?php foreach ($categories as $category) : ?>
+                        <option value="<?= $category ["id"]?>"><?= $category ["category_name"] ?></option>
+                        <?php endforeach; ?>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label>Harga</label>
-                      <input type="text" class="form-control">
+                      <label for="price">Harga</label>
+                      <input type="text" id="price" name="price" class="form-control">
                     </div>
                     <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary">Tambahkan</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Tambahkan</button>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

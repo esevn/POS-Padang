@@ -1,11 +1,42 @@
 <?php
 
-require_once __DIR__ . "/../Model/Model.php";
+require_once __DIR__ . '/../Model/Model.php';
+require_once __DIR__ . '/../Model/Category.php';
+require_once __DIR__ . '/../Model/Item.php';
 
 if(!isset($_SESSION["full_name"])){
-    header("Location: login.php");
-    exit;
+  header("Location: login.php");
+  exit;
+}
+
+
+$id = $_GET['id'];
+if(!isset($id)){
+  header("Location: index-menu.php");
+  exit;
+}
+$categories = new Category();
+$categories = $categories->all();
+
+$menu = new Item();
+$detail_menu = $menu->find($id);
+
+if(isset($_POST["submit"])){
+  // var_dump($_FILES);
+  $datas = [
+  "post" => $_POST,
+  "files" => $_FILES,
+  ];
+
+  $result = $menu->create($datas);
+  if(gettype($result) == "string"){
+    echo "<script>alert('Kategori baru diedit dengan nama {$result['category_name']}'); window.location.href = 'index-menu.php';
+  </script>";
+  }else{
+    
   }
+}
+
 
 ?>
 
@@ -66,54 +97,40 @@ if(!isset($_SESSION["full_name"])){
                 <img src="../assets/img/ilustratiton/skate.png" alt="" style="width: 300px;      ">
               </div>
               <div class="col-12 col-md-6 col-lg-6 mx-auto">
-                <div class="card profile-widget">
-                  <div class="profile-widget-header row">                                         
-                    <div class="profile-widget-items">
-                    <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle profile-widget-picture">
-                      <div class="profile-widget-item">
-                        <div class="profile-widget-item-label">Posts</div>
-                        <div class="profile-widget-item-value">187</div>
-                      </div>
-                      <div class="profile-widget-item">
-                        <div class="profile-widget-item-label">Followers</div>
-                        <div class="profile-widget-item-value">6,8K</div>
-                      </div>
-                      <div class="profile-widget-item">
-                        <div class="profile-widget-item-label">Following</div>
-                        <div class="profile-widget-item-value">2,1K</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div class="card">
                   <div class="card-header">
-                    <h4>Edit Profile</h4>
+                    <h4>Input Text</h4>
                   </div>
-                  <div class="card-body">
+                    <form action="" method="POST" enctype="multipart/form-data" class="card-body" >
                     <div class="form-group">
-                      <label>Name</label>
-                      <input type="text" class="form-control">
+                      <label for="name">Nama menu</label>
+                      <input type="text" id="name" name="name" class="form-control">
                     </div>
+                    <div class="form-group d-flex flex-column">
+                        <label for="attachment">Gambar</label>
+                          <div class="custom-file">
+                            <input type="file" name="attachment" class="custom-file-input" id="attachment">
+                            <label class="custom-file-label">Choose File</label>
+                          </div>
+                          <div class="form-text text-muted">The image must have a maximum size of 5MB`
+                          </div>                 
+                      </div>
                     <div class="form-group">
-                      <label>Gender</label>
-                      <select class="form-control selectric">
-                        <option>Laki-laki</option>
-                        <option>Perempuan</option>
-                        <option>Transgender</option>
+                      <label for="category">Pilih Kategori</label>
+                      <select name="category_id" id="category" class="form-control selectric">
+                        <?php foreach ($categories as $category) : ?>
+                        <option value="<?= $category ["id"]?>"><?= $category ["category_name"] ?></option>
+                        <?php endforeach; ?>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label>Email</label>
-                      <input type="email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                      <label>Password</label>
-                      <input type="email" class="form-control">
+                      <label for="price">Harga</label>
+                      <input type="text" id="price" name="price" class="form-control">
                     </div>
                     <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary">Tambahkan</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Tambahkan</button>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

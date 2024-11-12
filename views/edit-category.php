@@ -7,22 +7,30 @@ if(!isset($_SESSION["full_name"])){
   exit;
 }
 
+$id = $_GET['id'];
+if(!isset($id)){
+  header("Location: index-category.php");
+  exit;
+}
+$categories = new Category();
+$detail_category = $categories->find($id)[0];
+
 if(isset($_POST['submit'])) {
 $category = [
   "category_name" => $_POST["category_name"]
 ];
 if(strlen($_POST["category_name"]) > 230){
-  echo "<script>alert('Kategori harus dibawah 230 karakter woi🤬'); window.location.href = 'create-category.php';
+  echo "<script>alert('Kategori harus dibawah 230 karakter woi🤬'); window.location.href = 'edit-category.php';
   </script>";
   die;
 }
-$categories = new Category();
-$result = $categories->create($category);
+$result = $categories->update($id, $category);
+
 if($result !== false){
-  echo "<script>alert('Kategori baru ditambahkan dengan nama {$result['category_name']}'); window.location.href = 'create-category.php';
+  echo "<script>alert('Kategori baru diedit dengan nama {$result['category_name']}'); window.location.href = 'index-category.php';
   </script>";
 }else{
-  "<script>alert('Kategori gagal ditambahkan'); window.location.href = 'create-category.php';
+  "<script>alert('Kategori gagal diedit'); window.location.href = 'edit-category.php';
   </script>";
 }
 }
@@ -34,7 +42,7 @@ if($result !== false){
 
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" full_name="viewport">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>Blank Page &mdash; Stisla</title>
 
     <!-- General CSS Files -->
@@ -74,7 +82,7 @@ if($result !== false){
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Blank Page</h1>
+                        <h1>Edit Kategorimu</h1>
                     </div>
 
         <div class="row">
@@ -87,16 +95,16 @@ if($result !== false){
               <div class="col-12 col-md-6 col-lg-6 mx-auto">
                 <div class="card">
                   <div class="card-header">
-                    <h4>Tambah Kategori</h4>
+                    <h4>Edit Kategori</h4>
                   </div>
                   <div class="card-body w-full">
                     <form action="" method="post">
                     <div class="form-group">
                       <label for="category_name">Nama Kategori</label>
-                      <input type="text" full_name="category_name" id="category_name" class="form-control" >
+                      <input type="text" name="category_name" id="category_name" class="form-control" value="<?= $detail_category['category_name'] ?>">
                     </div>
                     <div class="d-flex justify-content-end">
-                    <button type="submit" full_name="submit" class="btn btn-primary">Tambahkan</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Edit</button>
                     </div>
                     </form>
                   </div>
